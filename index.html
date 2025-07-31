@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Калькулятор Даты Рождения</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      animation: fadeIn 1s ease;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #aaa;
+      margin-top: 10px;
+      width: 100%;
+    }
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #357ab8;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.6s ease;
+    }
+    .result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.9);}
+      to {opacity: 1; transform: scale(1);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Калькулятор Даты Рождения</h2>
+    <input type="date" id="dob">
+    <button onclick="calculate()">Рассчитать</button>
+    <div class="result" id="output"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const dob = new Date(document.getElementById("dob").value);
+      if (!dob.getTime()) return;
+
+      const days = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+      const now = new Date();
+      let age = now.getFullYear() - dob.getFullYear();
+      const m = now.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--;
+
+      const nextRound = (Math.floor(age / 10) + 1) * 10;
+      let nextBirthday = new Date(dob);
+      nextBirthday.setFullYear(dob.getFullYear() + nextRound);
+      while (nextBirthday < now) nextBirthday.setFullYear(nextBirthday.getFullYear() + 10);
+
+      const output = document.getElementById("output");
+      output.innerHTML = `
+        День недели: <b>${days[dob.getDay()]}</b><br>
+        Вам <b>${age}</b> лет<br>
+        Следующий юбилей: <b>${nextRound}</b> лет (${nextBirthday.toLocaleDateString()})
+      `;
+      output.classList.add("show");
+    }
+  </script>
+</body>
+</html>
